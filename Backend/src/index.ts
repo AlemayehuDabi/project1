@@ -7,8 +7,12 @@ import authRoute from "./routes/authRoute";
 // import multer from "multer";
 import userRouter from "./routes/userRoute";
 import paymentRouter from "./routes/paymentRoute";
+import notificationRoutes from "./routes/notificationRoute";
 
 // import { app, server } from "./utils/socket";
+
+// Start the cron jobs
+import "./util/cronScheduler";
 
 const app = express();
 
@@ -34,6 +38,7 @@ connectDB();
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRouter);
 app.use("/api/payments", paymentRouter);
+app.use("/api/notifications", notificationRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

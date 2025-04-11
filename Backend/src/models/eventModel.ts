@@ -8,6 +8,7 @@ export interface IEvent extends Document {
   isPaid: boolean;
   price: number;
   usersRegistered: mongoose.Types.ObjectId[];
+  notifyInterval: number; // in minutes
 }
 
 const eventSchema = new mongoose.Schema<IEvent>({
@@ -18,6 +19,7 @@ const eventSchema = new mongoose.Schema<IEvent>({
   isPaid: { type: Boolean, default: false },
   price: { type: Number, default: 0 },
   usersRegistered: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  notifyInterval: { type: Number, required: true },
 });
 
 export const Event = mongoose.model<IEvent>("Event", eventSchema);
