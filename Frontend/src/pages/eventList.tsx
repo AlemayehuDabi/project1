@@ -1,5 +1,12 @@
-import React, { useState } from "react";
+// frontend/src/components/EventListPage.tsx
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
 import PaymentMethodSelector from "../component/PaymentMethodSelector"; // Import the PaymentMethodSelector component
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEvents } from "../redux/Slice/eventSlice"; // Assuming you have this slice
+
+// Socket connection
+const socket = io("http://localhost:5000"); // Update with your backend server URL
 
 const EventListPage: React.FC = () => {
   // Example events with dynamic amounts for each event
@@ -20,37 +27,67 @@ const EventListPage: React.FC = () => {
       description: "Sip wine and paint with Ethiopia’s top artists.",
       amount: 2000, // Dynamic price for this event
     },
-
     {
       _id: "3",
-      title: "Art & Wine Night",
-      date: "2025-04-22",
-      location: "Kuriftu Entoto",
-      description: "Sip wine and paint with Ethiopia’s top artists.",
-      amount: 2000, // Dynamic price for this event
+      title: "Cooking Class",
+      date: "2025-04-25",
+      location: "Kuriftu Resort",
+      description: "Learn the secrets of Ethiopian cuisine!",
+      amount: 1200, // Dynamic price for this event
     },
-
     {
       _id: "4",
-      title: "Art & Wine Night",
-      date: "2025-04-22",
+      title: "Live Jazz Night",
+      date: "2025-05-01",
       location: "Kuriftu Entoto",
-      description: "Sip wine and paint with Ethiopia’s top artists.",
-      amount: 2000, // Dynamic price for this event
+      description: "Enjoy a night of soulful jazz music.",
+      amount: 1800, // Dynamic price for this event
     },
   ];
 
   // State to track the selected event ID for payment
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [notifications, setNotifications] = useState<number>(0);
 
-  // Function to handle clicking the purchase button
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Fetch events on page load (optional if you have real-time events via Socket.IO)
+    // dispatch(fetchEvents());
+
+    // Listen for notifications from the backend
+    socket.on("eventNotification", (data: any) => {
+      // Increment notification count and handle the message
+      setNotifications((prevNotifications) => prevNotifications + 1);
+    });
+
+    return () => {
+      socket.off("eventNotification"); // Clean up on component unmount
+    };
+  }, [dispatch]);
+
   const handlePurchaseClick = (eventId: string) => {
     setSelectedEventId(eventId); // Set the event ID to display the payment selector
+  };
+
+  const handleClearNotifications = () => {
+    setNotifications(0); // Clear notifications when clicked
   };
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Upcoming Events</h1>
+
+      {/* Notification Badge */}
+      {notifications > 0 && (
+        <div
+          onClick={handleClearNotifications}
+          className="absolute top-4 right-4 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
+        >
+          <span className="text-xs font-semibold">{notifications}</span>
+        </div>
+      )}
+
       <div className="grid gap-4">
         {dummyEvents.map((event) => (
           <div
