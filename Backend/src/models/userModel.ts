@@ -1,5 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import bcrypt from "bcrypt"; // Import bcrypt for password hashing
+import bcrypt from "bcryptjs"; // Import bcrypt for password hashing
 
 export interface IUser extends Document {
   name: string;

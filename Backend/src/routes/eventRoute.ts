@@ -3,10 +3,9 @@ import {
   createEvent,
   getEvents,
   registerForEvent,
-} from "../controllers/eventController";
+} from "../controller/eventController";
 
-import { authorizeAdmin } from "../middleware/authAdmin";
-import { authenticateUser } from "../middleWare/authenticateUser";
+import { authorizeAdmin, authenticateUser } from "../middleWare/protect";
 
 const router = express.Router();
 

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // Set the target ECMAScript version (ESNext is best for Node.js)
+    "module": "NodeNext", // Use NodeNext module resolution for compatibility with ES Modules
+    "moduleResolution": "NodeNext", // NodeNext module resolution strategy
+    "esModuleInterop": true, // Allow default imports for CommonJS modules
+    "skipLibCheck": true, // Skip type checking of declaration files for better performance
+    "forceConsistentCasingInFileNames": true, // Ensure file name casing is consistent
+    "strict": true, // Enable strict mode (recommended for type safety)
+    "outDir": "./dist", // Output directory for compiled JavaScript
+    "resolveJsonModule": true // Allow importing JSON files as modules
+  },
+  "include": ["src/**/*.ts"], // Include all TypeScript files in the src folder
+  "exclude": ["node_modules"] // Exclude node_modules folder
+}

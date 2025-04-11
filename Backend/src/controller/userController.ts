@@ -1,15 +1,21 @@
 import { Request, Response } from "express";
-import { User } from "../models/User";
-import { Event } from "../models/Event";
+import { User } from "../models/userModel";
+import { Event } from "../models/eventModel";
 import QRCode from "qrcode";
-import { Request, Response } from "express";
 
 // Fetch user profile (tier, points, and events)
-export const getUserProfile = async (req: Request, res: Response) => {
+export const getUserProfile = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const user = await User.findById(req.userId).populate("events"); // Populate events with details
+    const userId = req.user._id;
+    const user = await User.findById(userId).populate("events"); // Populate events with details
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
 
     user.calculateTier(); // Calculate tier based on points
     await user.save(); // Save the updated tier
@@ -23,6 +29,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch user profile" });
+    return;
   }
 };
 
