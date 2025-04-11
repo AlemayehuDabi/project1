@@ -19,35 +19,58 @@ const ReceiptPage = () => {
 
   // Render loading or error state
   if (status === "pending") {
-    return <p>Loading...</p>;
+    return <p className="text-center text-lg">Loading...</p>;
   }
 
   if (status === "failed" && error) {
-    return <p>Error: {error}</p>;
+    return <p className="text-center text-red-600">Error: {error}</p>;
   }
 
   if (!receipt) {
-    return <p>Receipt not found</p>;
+    return <p className="text-center text-gray-500">Receipt not found</p>;
   }
 
   return (
-    <div className="p-8 max-w-xl mx-auto bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">Payment Receipt</h1>
-      <p>
-        <strong>Transaction Ref:</strong> {receipt.tx_ref}
-      </p>
-      <p>
-        <strong>Amount:</strong> {receipt.amount} ETB
-      </p>
-      <p>
-        <strong>Status:</strong> {receipt.status}
-      </p>
-      <p>
-        <strong>Event:</strong> {receipt.eventId}
-      </p>
-      <p>
-        <strong>Date:</strong> {new Date(receipt.paymentDate).toLocaleString()}
-      </p>
+    <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-6">
+      <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
+        Payment Receipt
+      </h1>
+      <div className="space-y-4">
+        <div className="flex justify-between text-lg">
+          <span className="font-medium text-gray-700">Transaction Ref:</span>
+          <span className="text-gray-600">{receipt.tx_ref}</span>
+        </div>
+
+        <div className="flex justify-between text-lg">
+          <span className="font-medium text-gray-700">Amount:</span>
+          <span className="text-gray-600">{receipt.amount} ETB</span>
+        </div>
+
+        <div className="flex justify-between text-lg">
+          <span className="font-medium text-gray-700">Status:</span>
+          <span
+            className={`text-lg ${
+              receipt.status === "successful"
+                ? "text-green-600"
+                : "text-red-600"
+            }`}
+          >
+            {receipt.status}
+          </span>
+        </div>
+
+        <div className="flex justify-between text-lg">
+          <span className="font-medium text-gray-700">Event:</span>
+          <span className="text-gray-600">{receipt.eventId}</span>
+        </div>
+
+        <div className="flex justify-between text-lg">
+          <span className="font-medium text-gray-700">Payment Date:</span>
+          <span className="text-gray-600">
+            {new Date(receipt.paymentDate).toLocaleString()}
+          </span>
+        </div>
+      </div>
     </div>
   );
 };

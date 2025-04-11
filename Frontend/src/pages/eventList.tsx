@@ -1,4 +1,3 @@
-// frontend/src/components/EventListPage.tsx
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import PaymentMethodSelector from "../component/PaymentMethodSelector"; // Import the PaymentMethodSelector component
@@ -75,37 +74,41 @@ const EventListPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Upcoming Events</h1>
+    <div className="p-6 max-w-4xl mx-auto bg-gray-50">
+      <h1 className="text-3xl font-bold text-center mb-6">Upcoming Events</h1>
 
       {/* Notification Badge */}
       {notifications > 0 && (
         <div
           onClick={handleClearNotifications}
-          className="absolute top-4 right-4 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center cursor-pointer"
+          className="absolute top-4 right-4 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center cursor-pointer"
         >
           <span className="text-xs font-semibold">{notifications}</span>
         </div>
       )}
 
-      <div className="grid gap-4">
+      <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {dummyEvents.map((event) => (
           <div
             key={event._id}
-            className="p-4 border rounded-lg shadow-sm hover:shadow-md transition"
+            className="p-6 bg-white rounded-lg shadow-lg hover:shadow-2xl transition-all relative"
           >
-            <h2 className="text-xl font-semibold">{event.title}</h2>
+            <h2 className="text-xl font-semibold text-blue-800">
+              {event.title}
+            </h2>
             <p className="text-sm text-gray-600">
               {new Date(event.date).toLocaleDateString()} – {event.location}
             </p>
-            <p className="mt-2">{event.description}</p>
-            <p className="mt-4 text-lg font-bold">Price: {event.amount} ETB</p>
+            <p className="mt-2 text-gray-700">{event.description}</p>
+            <p className="mt-4 text-lg font-semibold text-blue-600">
+              Price: {event.amount} ETB
+            </p>
 
             {/* Button to proceed to payment */}
             {selectedEventId !== event._id && (
               <button
                 onClick={() => handlePurchaseClick(event._id)}
-                className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+                className="bg-blue-500 text-white px-6 py-3 rounded-lg mt-4 w-full transition duration-300 ease-in-out hover:bg-blue-600"
               >
                 Purchase Event
               </button>

@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import { ZimanyHome } from "./pages/MainPage";
 // import { HostAccommodation } from "./pages/HostAccomodationPage";
 import SignupPage from "./pages/signupPage";
 import LoginPage from "./pages/LoginPage";
@@ -13,6 +12,7 @@ import LoginPage from "./pages/LoginPage";
 // import { useDispatch, useSelector } from "react-redux";
 // import { useEffect } from "react";
 import EventListPage from "./pages/eventList";
+import HomePage from "./pages/HomePage";
 
 const App = () => {
   // const dispatch = useDispatch<AppDispatch>();
@@ -20,7 +20,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<ZimanyHome />} /> */}
+        <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/event-list" element={<EventListPage />} />

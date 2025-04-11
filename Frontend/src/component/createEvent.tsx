@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../redux/hooks.ts";
-import { createEvent } from "../redux/slices/eventSlice";
+import { createEvent } from "../redux/Slice/eventSlice.ts";
 import { toast } from "react-toastify";
 
 const CreateEventForm = () => {
@@ -15,7 +15,7 @@ const CreateEventForm = () => {
 
   if (!user || user.role !== "admin") {
     return (
-      <div className="text-red-600 font-semibold p-4">
+      <div className="text-red-600 font-semibold p-4 text-center">
         Access denied. Only admins can create events.
       </div>
     );
@@ -42,9 +42,11 @@ const CreateEventForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-lg mx-auto bg-white p-6 rounded-xl shadow-md mt-6"
+      className="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg mt-8"
     >
-      <h2 className="text-2xl font-bold mb-4 text-center">Create New Event</h2>
+      <h2 className="text-3xl font-semibold text-center text-blue-800 mb-6">
+        Create New Event
+      </h2>
 
       <input
         type="text"
@@ -52,7 +54,7 @@ const CreateEventForm = () => {
         value={formData.title}
         onChange={handleChange}
         placeholder="Event Title"
-        className="w-full p-2 mb-4 border rounded"
+        className="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         required
       />
 
@@ -61,7 +63,7 @@ const CreateEventForm = () => {
         name="date"
         value={formData.date}
         onChange={handleChange}
-        className="w-full p-2 mb-4 border rounded"
+        className="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         required
       />
 
@@ -71,7 +73,7 @@ const CreateEventForm = () => {
         value={formData.location}
         onChange={handleChange}
         placeholder="Event Location"
-        className="w-full p-2 mb-4 border rounded"
+        className="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         required
       />
 
@@ -80,14 +82,14 @@ const CreateEventForm = () => {
         value={formData.description}
         onChange={handleChange}
         placeholder="Event Description"
-        className="w-full p-2 mb-4 border rounded"
+        className="w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
         rows={4}
         required
       />
 
       <button
         type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition ease-in-out duration-300"
       >
         Create Event
       </button>

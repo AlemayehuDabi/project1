@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks.ts";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
   fetchEvents,
   deleteEvent,
@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 
 const EventList = () => {
   const dispatch = useAppDispatch();
-  const { events, status } = useAppSelector((state) => state.events);
+  const { events, status, error } = useAppSelector((state) => state.events);
   const user = useAppSelector((state) => state.auth.user);
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState({
@@ -24,9 +24,13 @@ const EventList = () => {
   }, [dispatch]);
 
   const handleDelete = async (eventId: string) => {
-    if (confirm("Are you sure?")) {
-      await dispatch(deleteEvent(eventId));
-      toast.success("Event deleted");
+    if (window.confirm("Are you sure you want to delete this event?")) {
+      try {
+        await dispatch(deleteEvent(eventId));
+        toast.success("Event deleted");
+      } catch (err) {
+        toast.error("Failed to delete event");
+      }
     }
   };
 
@@ -41,14 +45,46 @@ const EventList = () => {
   };
 
   const handleEditSubmit = async () => {
+    if (!editData.title || !editData.date || !editData.location) {
+      toast.error("All fields must be filled");
+      return;
+    }
     if (editId) {
-      await dispatch(updateEvent({ eventId: editId, updates: editData }));
-      toast.success("Event updated");
-      setEditId(null);
+      try {
+        await dispatch(updateEvent({ eventId: editId, updates: editData }));
+        toast.success("Event updated");
+        setEditId(null);
+      } catch (err) {
+        toast.error("Failed to update event");
+      }
     }
   };
 
-  if (status === "loading") return <div>Loading...</div>;
+  if (status === "loading")
+    return <div className="text-center">Loading...</div>;
+  if (status === "failed")
+    return <div className="text-center text-red-600">{error}</div>;
+
+  const renderAdminControls = (event: any) => {
+    if (user?.role === "admin") {
+      return (
+        <div className="mt-2 flex gap-2">
+          <button
+            onClick={() => handleEditClick(event)}
+            className="bg-blue-600 text-white px-3 py-1 rounded"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDelete(event._id)}
+            className="bg-red-600 text-white px-3 py-1 rounded"
+          >
+            Delete
+          </button>
+        </div>
+      );
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -67,6 +103,7 @@ const EventList = () => {
                   setEditData({ ...editData, title: e.target.value })
                 }
                 className="w-full p-2 border rounded"
+                placeholder="Event Title"
               />
               <input
                 type="date"
@@ -83,6 +120,7 @@ const EventList = () => {
                   setEditData({ ...editData, location: e.target.value })
                 }
                 className="w-full p-2 border rounded"
+                placeholder="Event Location"
               />
               <textarea
                 value={editData.description}
@@ -90,6 +128,7 @@ const EventList = () => {
                   setEditData({ ...editData, description: e.target.value })
                 }
                 className="w-full p-2 border rounded"
+                placeholder="Event Description"
               />
               <div className="flex gap-2">
                 <button
@@ -112,23 +151,7 @@ const EventList = () => {
               <p>Date: {new Date(event.date).toLocaleDateString()}</p>
               <p>Location: {event.location}</p>
               <p className="text-sm text-gray-700">{event.description}</p>
-
-              {user?.role === "admin" && (
-                <div className="mt-2 flex gap-2">
-                  <button
-                    onClick={() => handleEditClick(event)}
-                    className="bg-blue-600 text-white px-3 py-1 rounded"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(event._id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
+              {renderAdminControls(event)}
             </>
           )}
         </div>

@@ -14,19 +14,26 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, currentPage }) => {
   };
 
   return (
-    <div className="pagination-controls">
+    <div className="flex items-center justify-center space-x-4 py-4">
+      {/* Previous Button */}
       <button
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 transition"
       >
         Previous
       </button>
-      <span>
+
+      {/* Current Page Display */}
+      <span className="text-lg font-semibold">
         {currentPage} / {totalPages}
       </span>
+
+      {/* Next Button */}
       <button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 transition"
       >
         Next
       </button>
