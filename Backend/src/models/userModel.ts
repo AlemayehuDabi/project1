@@ -10,20 +10,37 @@ export interface IUser extends Document {
   tier: string; // "Silver", "Gold", "Platinum", etc.
   events: mongoose.Types.ObjectId[]; // References to upcoming events
   role: "user" | "admin";
+  refreshToken?: string;
   membershipId: string;
-  calculateTier: () => void; // Add calculateTier method type
+  calculateTier: () => void;
+  // Add calculateTier method type
+  resetPasswordToken?: string;
+  resetPasswordExpire?: Date;
+  matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
 // User schema definition with tier and points
 const userSchema = new mongoose.Schema<IUser>({
-  name: { type: String, required: true },
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 3,
+    maxlength: 15,
+  },
   email: {
     type: String,
     required: true,
     unique: true,
-    match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // Email validation regex
+    trim: true,
+    lowercase: true,
+    match: [/\S+@\S+\.\S+/, "Please provide a valid email address"],
   },
-  password: { type: String, required: true },
+  password: {
+    type: String,
+    required: true,
+    minlength: 8,
+  },
   points: { type: Number, default: 0 }, // Points earned
   tier: { type: String, default: "Silver" }, // Default tier
   events: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }], // Referencing events
@@ -31,9 +48,12 @@ const userSchema = new mongoose.Schema<IUser>({
   membershipId: {
     type: String,
     unique: true,
-    required: true,
+    // required: true,
     default: () => new mongoose.Types.ObjectId().toString(), // Convert ObjectId to string
   },
+  refreshToken: { type: String },
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
 });
 
 // Function to calculate user tier based on points
@@ -53,6 +73,17 @@ userSchema.pre("save", async function (next) {
 
   next();
 });
+
+userSchema.methods.matchPassword = async function (enteredPassword: string) {
+  try {
+    const password = enteredPassword.toString();
+    const isMatch = await bcrypt.compare(password, this.password);
+    return isMatch;
+  } catch (error) {
+    console.error("Error during password comparison:", error);
+    throw new Error("Error comparing passwords");
+  }
+};
 
 // Compare password
 userSchema.methods.comparePassword = function (password: string) {
