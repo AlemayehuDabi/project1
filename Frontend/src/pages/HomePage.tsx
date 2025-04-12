@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../redux/hooks";
+import GebetaMapDirections from "../component/GebetaMapDirection";
 
 const HomePage = () => {
   const [scrolling, setScrolling] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [showDirections, setShowDirections] = useState(false);
 
   const handleSignInClick = () => {
     navigate("/signin");
@@ -13,6 +15,10 @@ const HomePage = () => {
 
   const handleSignUpClick = () => {
     navigate("/signup");
+  };
+
+  const handleDirectionsClick = () => {
+    setShowDirections(!showDirections); // Toggle the visibility of directions
   };
 
   // Handle the scroll event
@@ -37,22 +43,36 @@ const HomePage = () => {
       {/* Navbar */}
       <nav
         className={`fixed top-0 left-0 w-full z-20 py-6 px-6 transition-all ${
-          scrolling ? "bg-blue-900 shadow-lg" : "bg-transparent"
+          scrolling ? "bg-blue-900 shadow-2xl" : "bg-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="text-white text-3xl font-bold">Kuriftu Resort</div>
+          <div className="text-white text-4xl font-extrabold tracking-wider">
+            Kuriftu Resort
+          </div>
           <div className="space-x-6 hidden lg:flex">
-            <a href="#about" className="hover:text-blue-300 transition">
+            <a
+              href="#about"
+              className="hover:text-blue-300 transition text-xl font-semibold"
+            >
               About Us
             </a>
-            <a href="#events" className="hover:text-blue-300 transition">
+            <a
+              href="#events"
+              className="hover:text-blue-300 transition text-xl font-semibold"
+            >
               Events
             </a>
-            <a href="#contact" className="hover:text-blue-300 transition">
+            <a
+              href="#contact"
+              className="hover:text-blue-300 transition text-xl font-semibold"
+            >
               Contact Us
             </a>
-            <a href="#testimonial" className="hover:text-blue-300 transition">
+            <a
+              href="#testimonial"
+              className="hover:text-blue-300 transition text-xl font-semibold"
+            >
               Testimonials
             </a>
           </div>
@@ -66,27 +86,27 @@ const HomePage = () => {
           autoPlay
           loop
           muted
-          className="w-full h-full object-cover opacity-60"
+          className="w-full h-full object-cover opacity-70"
         ></video>
         <div className="absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white">
-          <h1 className="text-6xl font-extrabold mb-4">
+          <h1 className="text-6xl font-extrabold text-shadow-lg mb-6">
             Welcome to Kuriftu Resort
           </h1>
-          <p className="text-xl mb-8 max-w-lg mx-auto">
+          <p className="text-xl mb-8 max-w-lg mx-auto text-shadow-md">
             Escape into luxury, relaxation, and unforgettable memories
             surrounded by nature's beauty.
           </p>
           <button
             onClick={handleSignInClick}
-            className="py-3 px-8 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+            className="py-3 px-8 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition transform hover:scale-105"
           >
             Sign In
           </button>
           <div className="mt-4">
             <button
               onClick={handleSignUpClick}
-              className="py-3 px-8 bg-transparent border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
+              className="py-3 px-8 bg-transparent border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition transform hover:scale-105"
             >
               Sign Up
             </button>
@@ -94,10 +114,23 @@ const HomePage = () => {
         </div>
       </div>
 
+      {/* Directions Button */}
+      <div className="text-center mt-8">
+        <button
+          onClick={handleDirectionsClick}
+          className="py-3 px-8 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition transform hover:scale-105"
+        >
+          Get Directions to Kuriftu Resort
+        </button>
+      </div>
+
+      {/* Directions Map */}
+      {showDirections && <GebetaMapDirections eventCoords={null} />}
+
       {/* About Us Section */}
       <div id="about" className="py-16 bg-white text-gray-800">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold">About Us</h2>
+          <h2 className="text-4xl font-bold text-blue-900">About Us</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Discover Kuriftu Resort, where serenity meets luxury. Nestled in the
             heart of nature, we offer a peaceful escape with world-class
@@ -109,7 +142,7 @@ const HomePage = () => {
             <img
               src="/path/to/about-us-image.jpg" // Replace with your actual image
               alt="About Us"
-              className="w-full h-full object-cover rounded-lg shadow-xl"
+              className="w-full h-full object-cover rounded-lg shadow-xl hover:scale-105 transition"
             />
           </div>
           <div className="flex-1">
@@ -127,7 +160,7 @@ const HomePage = () => {
       {/* Events Section */}
       <div id="events" className="py-16 bg-gray-100 text-gray-800">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold">Upcoming Events</h2>
+          <h2 className="text-4xl font-bold text-blue-900">Upcoming Events</h2>
           <p className="text-xl text-gray-600">
             Don’t miss out on the exciting activities happening at Kuriftu
             Resort!
@@ -135,7 +168,7 @@ const HomePage = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto px-4">
           {/* Event Cards */}
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transform transition hover:scale-105">
             <img
               src="/path/to/beachfront-yoga.jpg" // Replace with your actual image
               alt="Beachfront Yoga"
@@ -151,7 +184,8 @@ const HomePage = () => {
               </button>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+
+          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transform transition hover:scale-105">
             <img
               src="/path/to/dinner-wine-tasting.jpg" // Replace with your actual image
               alt="Dinner & Wine Tasting"
@@ -167,7 +201,8 @@ const HomePage = () => {
               </button>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+
+          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transform transition hover:scale-105">
             <img
               src="/path/to/adventure-hiking.jpg" // Replace with your actual image
               alt="Adventure Hiking"
@@ -189,7 +224,7 @@ const HomePage = () => {
       {/* Testimonials Section */}
       <div id="testimonial" className="py-16 text-gray-800">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-800">
+          <h2 className="text-4xl font-bold text-blue-900">
             What Our Guests Say
           </h2>
         </div>
@@ -229,7 +264,7 @@ const HomePage = () => {
       {/* Contact Us Section */}
       <section id="contact" className="py-16 bg-white text-gray-800">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold">Contact Us</h2>
+          <h2 className="text-3xl font-bold text-blue-900">Contact Us</h2>
           <p className="text-lg max-w-2xl mx-auto">
             Have questions or need assistance? Reach out to us, and we will be
             happy to assist you.
@@ -244,7 +279,7 @@ const HomePage = () => {
               <input
                 type="text"
                 id="name"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Your Name"
               />
             </div>
@@ -255,7 +290,7 @@ const HomePage = () => {
               <input
                 type="email"
                 id="email"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Your Email"
               />
             </div>
@@ -265,14 +300,14 @@ const HomePage = () => {
               </label>
               <textarea
                 id="message"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 rows={4}
                 placeholder="Your Message"
               ></textarea>
             </div>
             <button
               type="submit"
-              className="py-3 px-8 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+              className="py-3 px-8 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition transform hover:scale-105"
             >
               Submit
             </button>

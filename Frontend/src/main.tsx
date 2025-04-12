@@ -12,6 +12,10 @@ if (!container) {
 }
 
 const root = createRoot(container);
+
+// Fix leaflet marker icon paths
+import "./util/leafletconfig";
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
