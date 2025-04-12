@@ -11,8 +11,8 @@ import LoginPage from "./pages/LoginPage";
 // import { AppDispatch, RootState } from "../src/redux/store";
 // import { useDispatch, useSelector } from "react-redux";
 // import { useEffect } from "react";
-import EventListPage from "./pages/eventList";
 import HomePage from "./pages/HomePage";
+import ResortDetailsPage from "./pages/ResortDetailsPage";
 
 const App = () => {
   // const dispatch = useDispatch<AppDispatch>();
@@ -23,7 +23,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/event-list" element={<EventListPage />} />
+        <Route path="/details" element={<ResortDetailsPage />} />
 
         {/* protected  route */}
         {/* <Route element={<ProtectedRoute />}> */}
