@@ -13,6 +13,7 @@ import LoginPage from "./pages/LoginPage";
 // import { useEffect } from "react";
 import EventListPage from "./pages/eventList";
 import HomePage from "./pages/HomePage";
+import ResortDetailsPage from "./pages/ResortDetailsPage";
 
 const App = () => {
   // const dispatch = useDispatch<AppDispatch>();
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/event-list" element={<EventListPage />} />
+        <Route path="/details" element={<ResortDetailsPage />} />
 
         {/* protected  route */}
         {/* <Route element={<ProtectedRoute />}> */}
