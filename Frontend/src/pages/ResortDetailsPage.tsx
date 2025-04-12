@@ -1,32 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../redux/hooks";
+import PaymentMethodSelector from "../component/PaymentMethodSelector";
+import { on } from "events";
 
 const ResortDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState("overview");
-  const [showRsvpModal, setShowRsvpModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
   const [scrolling, setScrolling] = useState(false);
-  const [rsvpForm, setRsvpForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    guests: 1,
-    specialRequests: "",
-  });
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
-  // Sample resort data (in a real app, you would fetch this based on the ID)
   const resort = {
     id: 1,
     name: "Kuriftu Resort & Spa Bishoftu",
     location: "Bishoftu",
     description:
-      "Experience luxury by the crater lake with stunning views and serene surroundings. Our Bishoftu location offers the perfect getaway just an hour from Addis Ababa.",
+      "Experience luxury by the crater lake with stunning views and serene surroundings.",
     longDescription:
-      "Nestled along the shores of Lake Bishoftu, our flagship resort offers a perfect blend of luxury and natural beauty. The resort features elegant rooms with private balconies overlooking the lake, a world-class spa offering traditional and international treatments, and dining options that showcase the best of Ethiopian and international cuisine. Surrounded by lush gardens and the tranquil waters of the crater lake, this is the ideal destination for those seeking relaxation and rejuvenation.",
+      "Nestled along the shores of Lake Bishoftu, our flagship resort offers a perfect blend of luxury and natural beauty.",
     coordinates: { lat: 8.7333, lng: 38.9833 },
     rating: 4.8,
     reviews: 246,
@@ -55,55 +46,6 @@ const ResortDetailsPage = () => {
         description: "Stunning infinity pool overlooking the crater lake",
         icon: "pool",
       },
-      {
-        id: 5,
-        name: "Business Center",
-        description: "Fully equipped meeting rooms and conference facilities",
-        icon: "business_center",
-      },
-      {
-        id: 6,
-        name: "Fitness Center",
-        description: "Modern gym with personal training options",
-        icon: "fitness_center",
-      },
-      {
-        id: 7,
-        name: "Shuttle Service",
-        description: "Complimentary shuttle to and from Addis Ababa",
-        icon: "airport_shuttle",
-      },
-      {
-        id: 8,
-        name: "Wedding Venue",
-        description:
-          "Beautiful lakeside settings for ceremonies and receptions",
-        icon: "celebration",
-      },
-      {
-        id: 9,
-        name: "Coffee Ceremony",
-        description: "Traditional Ethiopian coffee ceremonies daily",
-        icon: "coffee",
-      },
-      {
-        id: 10,
-        name: "Cultural Tours",
-        description: "Guided excursions to local cultural sites",
-        icon: "tour",
-      },
-      {
-        id: 11,
-        name: "Gift Shop",
-        description: "Handcrafted souvenirs and local artwork",
-        icon: "shopping_bag",
-      },
-      {
-        id: 12,
-        name: "Childcare",
-        description: "Professional childcare services and kids' activities",
-        icon: "child_care",
-      },
     ],
     events: [
       {
@@ -124,7 +66,7 @@ const ResortDetailsPage = () => {
         date: "April 25, 2025",
         time: "7:00 PM - 9:30 PM",
         description:
-          "Sample the finest Ethiopian wines paired with gourmet appetizers while learning about local winemaking traditions.",
+          "Sample the finest Ethiopian wines paired with gourmet appetizers.",
         capacity: 30,
         spotsLeft: 12,
         price: "2,000 ETB",
@@ -136,72 +78,13 @@ const ResortDetailsPage = () => {
         date: "May 1-3, 2025",
         time: "All Day",
         description:
-          "A comprehensive wellness weekend including spa treatments, healthy meals, yoga sessions, and guided meditation.",
+          "A comprehensive wellness weekend including spa treatments and yoga.",
         capacity: 15,
         spotsLeft: 5,
         price: "12,000 ETB",
         image: "/path/to/wellness-weekend.jpg",
       },
-      {
-        id: 4,
-        name: "Cooking Class: Ethiopian Cuisine",
-        date: "May 10, 2025",
-        time: "11:00 AM - 2:00 PM",
-        description:
-          "Learn to prepare traditional Ethiopian dishes with our master chef, followed by a communal dining experience.",
-        capacity: 12,
-        spotsLeft: 6,
-        price: "1,800 ETB",
-        image: "/path/to/cooking-class.jpg",
-      },
-      {
-        id: 5,
-        name: "Lakeside Jazz Night",
-        date: "May 15, 2025",
-        time: "8:00 PM - 11:00 PM",
-        description:
-          "Enjoy live jazz music under the stars with premium cocktails and a special night menu.",
-        capacity: 50,
-        spotsLeft: 22,
-        price: "1,200 ETB",
-        image: "/path/to/jazz-night.jpg",
-      },
-      {
-        id: 6,
-        name: "Bird Watching Excursion",
-        date: "May 22, 2025",
-        time: "6:00 AM - 10:00 AM",
-        description:
-          "Guided tour around the crater lakes to observe the diverse bird species in the area.",
-        capacity: 10,
-        spotsLeft: 4,
-        price: "900 ETB",
-        image: "/path/to/bird-watching.jpg",
-      },
-      {
-        id: 7,
-        name: "Full Moon Dinner",
-        date: "May 24, 2025",
-        time: "7:30 PM - 10:30 PM",
-        description:
-          "Exclusive five-course dinner served on a floating platform under the full moon.",
-        capacity: 16,
-        spotsLeft: 6,
-        price: "3,500 ETB",
-        image: "/path/to/full-moon-dinner.jpg",
-      },
-      {
-        id: 8,
-        name: "Photography Workshop",
-        date: "June 5, 2025",
-        time: "2:00 PM - 5:00 PM",
-        description:
-          "Learn landscape and nature photography techniques from a professional photographer.",
-        capacity: 15,
-        spotsLeft: 9,
-        price: "1,600 ETB",
-        image: "/path/to/photography-workshop.jpg",
-      },
+
     ],
     images: [
       "/path/to/bishoftu-1.jpg",
@@ -211,60 +94,24 @@ const ResortDetailsPage = () => {
     ],
   };
 
-  const handleRsvp = (event) => {
-    setSelectedEvent(event);
-    setShowRsvpModal(true);
+  const handleRsvpPayment = (event) => {
+    console.log(`RSVP clicked for event ${event.id}`);
+    setSelectedEventId(event.id);
   };
 
-  const closeRsvpModal = () => {
-    setShowRsvpModal(false);
-    setSelectedEvent(null);
+  const handleClosePayment = () => {
+    console.log("ResortDetailsPage: Closing payment modal");
+    setSelectedEventId(null);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setRsvpForm({
-      ...rsvpForm,
-      [name]: value,
-    });
-  };
+  const handleGoBack = () => navigate(-1);
 
-  const handleSubmitRsvp = (e) => {
-    e.preventDefault();
-    // Here you would handle the RSVP submission, e.g., by making an API call
-    alert(`RSVP submitted for ${selectedEvent.name}!`);
-    closeRsvpModal();
-    setRsvpForm({
-      name: "",
-      email: "",
-      phone: "",
-      guests: 1,
-      specialRequests: "",
-    });
-  };
-
-  const handleGoBack = () => {
-    navigate(-1);
-  };
-
-  // Handle the scroll event
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolling(true);
-      } else {
-        setScrolling(false);
-      }
-    };
-
+    const handleScroll = () => setScrolling(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // If resort data is not available
   if (!resort) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -275,7 +122,6 @@ const ResortDetailsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 pb-16">
-      {/* Header with back button */}
       <header
         className={`fixed top-0 left-0 right-0 z-20 transition-all ${
           scrolling ? "bg-blue-900 shadow-lg" : "bg-transparent"
@@ -305,14 +151,14 @@ const ResortDetailsPage = () => {
         </div>
       </header>
 
-      {/* Hero Image */}
       <div className="relative w-full h-64">
         <img
           src={resort.images[0]}
           alt={resort.name}
           className="w-full h-full object-cover"
+          onError={(e) => (e.target.src = "/fallback.jpg")}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70" />
         <div className="absolute bottom-4 left-4 text-white">
           <h1 className="text-2xl font-bold">{resort.name}</h1>
           <div className="flex items-center mt-1">
@@ -354,7 +200,6 @@ const ResortDetailsPage = () => {
         </div>
       </div>
 
-      {/* Tabs Navigation */}
       <div className="bg-white border-b sticky top-16 z-10">
         <div className="flex overflow-x-auto">
           <button
@@ -400,22 +245,15 @@ const ResortDetailsPage = () => {
         </div>
       </div>
 
-      {/* Tab Content */}
       <div className="px-4 py-6">
-        {/* Overview Tab */}
         {activeTab === "overview" && (
           <div>
             <h2 className="text-xl font-bold mb-3">About This Resort</h2>
             <p className="text-gray-700 mb-6">{resort.longDescription}</p>
-
             <h3 className="text-lg font-semibold mb-2">Location</h3>
-            <div className="bg-gray-200 h-48 rounded-lg mb-6">
-              {/* Here you would integrate a map component */}
-              <div className="w-full h-full flex items-center justify-center text-gray-500">
-                Map View
-              </div>
+            <div className="bg-gray-200 h-48 rounded-lg mb-6 flex items-center justify-center text-gray-500">
+              Map View
             </div>
-
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div className="bg-white p-4 rounded-lg shadow">
                 <div className="text-blue-600 font-bold text-lg">
@@ -430,14 +268,12 @@ const ResortDetailsPage = () => {
                 <div className="text-gray-600">Events</div>
               </div>
             </div>
-
             <button
               onClick={() => setActiveTab("services")}
               className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
             >
               Explore Services
             </button>
-
             <button
               onClick={() => setActiveTab("events")}
               className="w-full mt-3 py-3 border border-blue-600 text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition"
@@ -447,7 +283,6 @@ const ResortDetailsPage = () => {
           </div>
         )}
 
-        {/* Services Tab */}
         {activeTab === "services" && (
           <div>
             <h2 className="text-xl font-bold mb-3">Our Services</h2>
@@ -455,7 +290,6 @@ const ResortDetailsPage = () => {
               Discover all the amenities and services available at {resort.name}
               .
             </p>
-
             <div className="space-y-4">
               {resort.services.map((service) => (
                 <div
@@ -463,7 +297,7 @@ const ResortDetailsPage = () => {
                   className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex items-start"
                 >
                   <div className="bg-blue-100 text-blue-600 p-3 rounded-full mr-4">
-                    <span className="material-icons">{service.icon}</span>
+                    <span>{service.icon}</span>
                   </div>
                   <div>
                     <h3 className="font-semibold">{service.name}</h3>
@@ -477,97 +311,105 @@ const ResortDetailsPage = () => {
           </div>
         )}
 
-        {/* Events Tab */}
         {activeTab === "events" && (
           <div>
             <h2 className="text-xl font-bold mb-3">Upcoming Events</h2>
             <p className="text-gray-700 mb-6">
               Join us for these special events and experiences at {resort.name}.
             </p>
-
             <div className="space-y-6">
-              {resort.events.map((event) => (
-                <div
-                  key={event.id}
-                  className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden"
-                >
-                  <div className="h-48 bg-gray-200 relative">
-                    <img
-                      src={event.image}
-                      alt={event.name}
-                      className="w-full h-full object-cover"
-                    />
-                    {event.spotsLeft < 5 && (
-                      <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                        Only {event.spotsLeft} spots left!
+              {resort.events.map((event) => {
+                const amount =
+                  parseInt(event.price.replace(/[^0-9]/g, "")) || 0;
+                return (
+                  <div
+                    key={event.id}
+                    className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden"
+                  >
+                    <div className="h-48 bg-gray-200 relative">
+                      <img
+                        src={event.image}
+                        alt={event.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => (e.target.src = "/fallback.jpg")}
+                      />
+                      {event.spotsLeft < 5 && (
+                        <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                          Only {event.spotsLeft} spots left!
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-bold text-lg">{event.name}</h3>
+                      <div className="flex items-center text-gray-600 text-sm mt-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        {event.date}
                       </div>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-bold text-lg">{event.name}</h3>
-                    <div className="flex items-center text-gray-600 text-sm mt-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                      {event.date}
-                    </div>
-                    <div className="flex items-center text-gray-600 text-sm mt-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      {event.time}
-                    </div>
-                    <p className="text-gray-600 text-sm mt-3">
-                      {event.description}
-                    </p>
-                    <div className="flex justify-between items-center mt-4">
-                      <div className="text-blue-600 font-bold">
-                        {event.price}
+                      <div className="flex items-center text-gray-600 text-sm mt-1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 mr-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        {event.time}
                       </div>
-                      <button
-                        onClick={() => handleRsvp(event)}
-                        className="py-2 px-4 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition"
-                      >
-                        RSVP Now
-                      </button>
+                      <p className="text-gray-600 text-sm mt-3">
+                        {event.description}
+                      </p>
+                      <div className="flex justify-between items-center mt-4">
+                        <div className="text-blue-600 font-bold">
+                          {event.price}
+                        </div>
+                        <button
+                          onClick={() => handleRsvpPayment(event)}
+                          className="py-2 px-4 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+                        >
+                          RSVP Now
+                        </button>
+                      </div>
+                      {selectedEventId === event.id && (
+                        <PaymentMethodSelector
+                          amount={amount}
+                          eventId={event.id}
+                          onClose={handleClosePayment}
+                        />
+                      )}
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
 
-        {/* Gallery Tab */}
         {activeTab === "gallery" && (
           <div>
             <h2 className="text-xl font-bold mb-3">Photo Gallery</h2>
             <p className="text-gray-700 mb-6">
               Explore the beauty of {resort.name} through our photo gallery.
             </p>
-
             <div className="grid grid-cols-2 gap-2">
               {resort.images.map((image, index) => (
                 <div
@@ -578,6 +420,7 @@ const ResortDetailsPage = () => {
                     src={image}
                     alt={`${resort.name} - Photo ${index + 1}`}
                     className="w-full h-full object-cover"
+                    onError={(e) => (e.target.src = "/fallback.jpg")}
                   />
                 </div>
               ))}
@@ -585,201 +428,6 @@ const ResortDetailsPage = () => {
           </div>
         )}
       </div>
-
-      {/* RSVP Modal */}
-      {showRsvpModal && selectedEvent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-black opacity-50"
-            onClick={closeRsvpModal}
-          ></div>
-          <div className="bg-white rounded-lg shadow-xl z-10 max-w-md w-full max-h-[90vh] overflow-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-start">
-                <h2 className="text-xl font-bold">
-                  RSVP for {selectedEvent.name}
-                </h2>
-                <button onClick={closeRsvpModal} className="text-gray-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <div className="flex items-center text-gray-700 text-sm">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  {selectedEvent.date}
-                </div>
-                <div className="flex items-center text-gray-700 text-sm mt-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  {selectedEvent.time}
-                </div>
-                <div className="text-blue-600 font-bold mt-2">
-                  {selectedEvent.price} per person
-                </div>
-              </div>
-
-              <form onSubmit={handleSubmitRsvp} className="mt-6 space-y-4">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={rsvpForm.name}
-                    onChange={handleInputChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={rsvpForm.email}
-                    onChange={handleInputChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={rsvpForm.phone}
-                    onChange={handleInputChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="guests"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Number of Guests
-                  </label>
-                  <select
-                    id="guests"
-                    name="guests"
-                    value={rsvpForm.guests}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {[...Array(10).keys()].map((num) => (
-                      <option key={num + 1} value={num + 1}>
-                        {num + 1}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="specialRequests"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Special Requests (Optional)
-                  </label>
-                  <textarea
-                    id="specialRequests"
-                    name="specialRequests"
-                    value={rsvpForm.specialRequests}
-                    onChange={handleInputChange}
-                    rows={3}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  ></textarea>
-                </div>
-
-                <div className="flex items-center mt-4">
-                  <input
-                    id="terms"
-                    name="terms"
-                    type="checkbox"
-                    required
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label
-                    htmlFor="terms"
-                    className="ml-2 block text-sm text-gray-700"
-                  >
-                    I agree to the terms and conditions
-                  </label>
-                </div>
-
-                <div className="mt-6">
-                  <button
-                    type="submit"
-                    className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition"
-                  >
-                    Complete RSVP
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

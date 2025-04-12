@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../redux/hooks";
 import GebetaMapDirections from "../component/GebetaMapDirection";
 
 const HomePage = () => {
@@ -8,7 +7,6 @@ const HomePage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showDirections, setShowDirections] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
   // Updated list of resorts with descriptions and service/event counts
   const resorts = [
@@ -116,7 +114,7 @@ const HomePage = () => {
 
           {/* Logo */}
           <div className="text-white text-xl font-bold tracking-wider">
-            Kuriftu Home Buddy
+            Kuriftu Resort
           </div>
 
           {/* Search Icon */}
