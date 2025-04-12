@@ -6,21 +6,14 @@ interface User {
   lastName: string;
 }
 
-interface PaymentRequestBody {
-  amount: number;
-  eventId: string;
-  user: User;
-  paymentMethod: string;
-}
-
 export const initiateChapaPayment = async (
   amount: number,
   user: User,
   paymentMethod: string,
   tx_ref: string
 ) => {
-  const callback_url = `https://yourdomain.com/api/payments/verify/${tx_ref}`;
-  const return_url = `https://yourfrontend.com/payment-success`;
+  const callback_url = `http://localhost:5000/api/payments/webhook`; // Updated to match new route
+  const return_url = `http://localhost:5173/payment-success`;
 
   try {
     const chapaRes = await axios.post(
@@ -36,8 +29,8 @@ export const initiateChapaPayment = async (
         return_url,
         payment_methods: [paymentMethod],
         customization: {
-          title: "Kuriftu Event Booking",
-          description: "Event Payment via Chapa",
+          title: "Kuriftu Event & Service Booking",
+          description: "Payment for Events or Services via Chapa",
         },
       },
       {
