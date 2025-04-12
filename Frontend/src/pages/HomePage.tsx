@@ -18,6 +18,7 @@ const HomePage = () => {
         "Enjoy lakeside luxury with cultural events like coffee ceremonies.",
       services: 12,
       events: 8,
+      image: "public/assets/mainImage.png",
     },
     {
       id: 2,
@@ -27,6 +28,7 @@ const HomePage = () => {
         "Mountain retreat with stunning views and traditional dance nights.",
       services: 15,
       events: 10,
+      image: "public/assets/image(2).png",
     },
     {
       id: 3,
@@ -36,6 +38,7 @@ const HomePage = () => {
         "Explore island monasteries and learn about Ethiopia’s heritage.",
       services: 14,
       events: 7,
+      image: "public/assets/image(3).png",
     },
     {
       id: 4,
@@ -45,6 +48,7 @@ const HomePage = () => {
         "Adventure by waterfalls with cultural tours and tej tastings.",
       services: 11,
       events: 6,
+      image: "public/assets/image(4).png",
     },
   ];
 
@@ -221,15 +225,15 @@ const HomePage = () => {
         </div>
         <div className="space-y-6">
           {resorts.map((resort) => (
+            console.log(resort.image),
             <div
               key={resort.id}
               className="bg-white rounded-lg shadow-lg overflow-hidden text-gray-800 relative"
             >
               <div className="h-48 bg-gray-300 relative">
+  
                 <img
-                  src={`/path/to/${resort.location
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")}.jpg`}
+                  src={resort.image}
                   alt={resort.name}
                   className="w-full h-full object-cover"
                 />
@@ -334,7 +338,7 @@ const HomePage = () => {
         <div className="space-y-4">
           <div>
             <img
-              src="/path/to/about-us-image.jpg"
+              src="./assets/image(10).png"
               alt="About Us"
               className="w-full h-48 object-cover rounded-lg shadow-lg"
             />

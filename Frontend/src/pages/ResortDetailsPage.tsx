@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PaymentMethodSelector from "../component/PaymentMethodSelector";
 import { on } from "events";
+import GebetaMapDirections from "../component/GebetaMapDirection";
+
 
 const ResortDetailsPage = () => {
   const { id } = useParams();
@@ -27,12 +29,14 @@ const ResortDetailsPage = () => {
         name: "Luxury Spa",
         description: "Full-service spa with traditional Ethiopian treatments",
         icon: "spa",
+        image: "/public/assets/spa.png",
       },
       {
         id: 2,
         name: "Fine Dining",
         description: "Lakeside restaurant with local and international cuisine",
         icon: "restaurant",
+        image: "/public/assets/envior.png",
       },
       {
         id: 3,
@@ -58,7 +62,8 @@ const ResortDetailsPage = () => {
         capacity: 20,
         spotsLeft: 8,
         price: "1,500 ETB",
-        image: "/path/to/yoga-retreat.jpg",
+        image: "/public/assets/wedding.png",
+
       },
       {
         id: 2,
@@ -70,7 +75,7 @@ const ResortDetailsPage = () => {
         capacity: 30,
         spotsLeft: 12,
         price: "2,000 ETB",
-        image: "/path/to/wine-tasting.jpg",
+        image: "/public/assets/Event.png",
       },
       {
         id: 3,
@@ -82,15 +87,15 @@ const ResortDetailsPage = () => {
         capacity: 15,
         spotsLeft: 5,
         price: "12,000 ETB",
-        image: "/path/to/wellness-weekend.jpg",
+        image: "/public/assets/event2.png",
       },
 
     ],
     images: [
-      "/path/to/bishoftu-1.jpg",
-      "/path/to/bishoftu-2.jpg",
-      "/path/to/bishoftu-3.jpg",
-      "/path/to/bishoftu-4.jpg",
+      "/public/assets/mainImage.png",
+      "/public/assets/event2.png",
+      "/public/assets/wedding.png",
+      "/public/assets/envior.png",
     ],
   };
 
@@ -251,8 +256,10 @@ const ResortDetailsPage = () => {
             <h2 className="text-xl font-bold mb-3">About This Resort</h2>
             <p className="text-gray-700 mb-6">{resort.longDescription}</p>
             <h3 className="text-lg font-semibold mb-2">Location</h3>
-            <div className="bg-gray-200 h-48 rounded-lg mb-6 flex items-center justify-center text-gray-500">
-              Map View
+            <div className="bg-gray-200 h-48 rounded-lg mb-6 flex items-center justify-center text-gray-500 ">
+              <div className="px-4 py-4 ">
+                <GebetaMapDirections eventCoords={null} />
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div className="bg-white p-4 rounded-lg shadow">

@@ -56,20 +56,15 @@ const GebetaMapDirections = ({
   }, []);
 
   return (
-    <section id="directions" className="py-16 bg-white text-gray-800">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold">Directions</h2>
-        <p className="text-xl text-gray-600">
-          Follow the route below to your selected event location.
-        </p>
-      </div>
+    <section id="directions" className="py-16 w-[400px] bg-white text-gray-800">
+
 
       <div className="max-w-7xl mx-auto px-4">
         <div className="rounded-lg shadow-lg overflow-hidden">
           <MapContainer
             center={kuriftuCoords}
             zoom={13}
-            style={{ height: "500px", width: "100%" }}
+            style={{ height: "240px", width: "100%" }}
             className="rounded-lg"
           >
             <TileLayer
